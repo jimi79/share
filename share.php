@@ -4,17 +4,7 @@
 
 // usage : date|curl -F "password=blah" -F "duration=1" -F data=@- http://localhost/share/share.php
 
-
-
-
-//https://wiki.php.net/rfc/password_hash
-
-
-
-function purge($coll)
-{
-	// will be done by another page in a crontab
-}
+// ressources https://wiki.php.net/rfc/password_hash 
 
 function init()
 {
@@ -66,10 +56,7 @@ function get($coll, $id, $password)
 				$err = "incorrect password";
 			}
 		} 
-
-
-	};
-	
+	}; 
 	if (!isset($object) && (!isset($err))) {
 		$err="not found"; }
 
@@ -82,7 +69,7 @@ function get($coll, $id, $password)
 }
 
 
-function test()
+function debug()
 {
 	// récupère tout de la collection
 	$cursor = $coll->find();
@@ -107,8 +94,6 @@ function pageUrl() {
 	return $pageURL; 
 }
 
-
-
 $coll=init();
 if (isset($_GET['id'])) { 
 	$password = '';
@@ -120,7 +105,6 @@ else {
 	// get ip authorized with _POST
 	if (isset($_FILES['data'])) {
 		$id=append($coll, file_get_contents($_FILES['data']['tmp_name']), $_POST['duration'], $_POST['password']);
-		//print("https://jimi79.hd.free.fr:5443/share/share.php?id=$id\n");
 		if (isset($_POST['password'])) {
 			print(pageUrl().'?id='.$id."&password="."\n");
 		}
