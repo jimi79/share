@@ -7,7 +7,7 @@ I just checked the sprunge website, and couldn't find source code, so i rewrote 
 **mongodb is required**
 
 ###Install
-put the both php file at some place
+put both php files in some www dir
 
 ####Usage in cli
 #####Post a file
