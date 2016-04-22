@@ -2,7 +2,9 @@
 
 *A php script that allow to share files easily, like sprunge.*
 
-I just checked the sprunge website, and couldn't find source code, so i rewrote approximately a php page with the same functionnalkities
+I just checked the sprunge website, and couldn't find source code, so i rewrote approximately a php page that seems to do the same thing
+
+**mongodb is required**
 
 ###Install
 put the both php file at some place
