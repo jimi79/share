@@ -2,6 +2,9 @@
 
 // need php5-mongo and apache restart
 
+
+
+
 // usage : date|curl -F "password=blah" -F "duration=1" -F data=@- http://localhost/share/share.php
 
 // ressources https://wiki.php.net/rfc/password_hash 
@@ -85,14 +88,17 @@ function pageUrl() {
 	$pageURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
 	if ($_SERVER["SERVER_PORT"] != "80")
 	{
-		    $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 	} 
 	else 
 	{
-		    $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	}
 	return $pageURL; 
 }
+
+
+print("Activate mongodb first !");
 
 $coll=init();
 if (isset($_GET['id'])) { 
