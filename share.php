@@ -1,7 +1,4 @@
 <?php
-
-
-
 ////////// ok, i should store the file as a file, not as blob.
 // the postgre db is useful to get a uniq ID, and some timestamp and hash stuff
 // so, if i append, i just store the file
@@ -117,7 +114,7 @@ function print_help() {
 	print("Will return the url to reach the posted data. After the duration written, the posted element won't be available\n");
 	print("\n");
 	print("  To upload somethg with a password\n");
-	print("somethg | curl -F data=@- -F 'passwod=foobar' ".page_url()."\n");
+	print("somethg | curl -F data=@- -F 'password=foobar' ".page_url()."\n");
 	print("\n");
 	print("Will return the url to reach the posted data, and the parameter password ready to be filled.\n");
 	print("\n");
