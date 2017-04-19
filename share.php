@@ -1,23 +1,16 @@
 <?php
-////////// ok, i should store the file as a file, not as blob.
-// the postgre db is useful to get a uniq ID, and some timestamp and hash stuff
-// so, if i append, i just store the file
-// if get, i output the file
-// if clear, then i select, and remove the concerned file, before removing the record
 
-// except that it is dangerous. well in fact, i should copy that into another dir than 'html', to be sure ppl won't upload a php and then run it
-
-// todo : limit per ip 
+// Preparation :
+// i need a DB, with lib/common.php describing the connection id
+// inside, i nned a table that is like 
+// create table data(id bigserial, data bytea, duration integer, end_valid timestamp, hash varchar(512));
 
 // need php5-pgsql 
+// the help is displayed if we call the php without any parameter
 
-// usage : date|curl -F "password=blah" -F "duration=1" -F data=@- http://localhost/share/share.php
 
-// ressources https://wiki.php.net/rfc/password_hash 
-
-// db structure : table data(id bigserial, data bytea, duration integer, end_valid timestamp, hash varchar(512));
-
-require "common.php";
+require_once('lib/common.php');
+require_once('lib/clear.php');
 
 function append($conn, $duration, $password)
 {
@@ -71,7 +64,7 @@ function get($conn, $id, $password)
 	if (isset($err)) {
 		return $err."\n"; }
 	else { 
-		return file_get_contents($file_dir.$line[0]);
+		return file_get_contents($file_dir.'/'.$line[0]);
 	}
 }
 
@@ -134,14 +127,16 @@ print("Notes :\n");
 	print("\n"); 
 }
 
-$conn=get_conn();
-if (isset($_GET['id'])) { 
+clear();
+
+$conn=get_conn(); 
+if (isset($_GET['id'])) {  // fetching something
 	$password = '';
 	if (isset($_GET['password'])) {
 		$password = $_GET['password']; }
 	print(get($conn, $_GET['id'], $password));
 }
-else {
+else { // storing something
 	$duration = Null;
 	if (isset($_POST['duration'])) {
 		$duration = $_POST['duration']; }
@@ -150,10 +145,9 @@ else {
 	if (isset($_POST['password'])) {
 		$password = $_POST['password']; } 
 	if (isset($_FILES['data'])) {
-		#$id=append($conn, file_get_contents($_FILES['data']['tmp_name']), $duration, $password);
 		$id=append($conn, $duration, $password); 
 		# now we store the file	
-		move_uploaded_file($_FILES['data']['tmp_name'], $file_dir.$id); 
+		move_uploaded_file($_FILES['data']['tmp_name'], $file_dir.'/'.$id); 
 		if (isset($_POST['password'])) {
 			print(page_url().'?id='.$id."&password="."\n");
 		}
