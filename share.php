@@ -6,8 +6,9 @@
 // create table data(id bigserial, data bytea, duration integer, end_valid timestamp, hash varchar(512));
 
 // need php5-pgsql 
-// the help is displayed if we call the php without any parameter
-
+// the help is displayed if we call this php without any parameter
+// clear.php can be called manually to clean the db of outdated stuff 
+// all files and dir should be readable by www-dat
 
 require_once('lib/common.php');
 require_once('lib/clear.php');
