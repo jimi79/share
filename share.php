@@ -149,6 +149,7 @@ else { // storing something
 		$id=append($conn, $duration, $password); 
 		# now we store the file	
 		move_uploaded_file($_FILES['data']['tmp_name'], $file_dir.'/'.$id); 
+		chmod($file_dir.'/'.$id,0640);
 		if (isset($_POST['password'])) {
 			print(page_url().'?id='.$id."&password="."\n");
 		}
