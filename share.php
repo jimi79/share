@@ -1,17 +1,16 @@
 <?php
 
 // Preparation :
-// i need a DB, with lib/common.php describing the connection id
+// i need a DB, with conf/config.php describing the connection id
 // inside, i nned a table that is like 
 // create table data(id bigserial, data bytea, duration integer, end_valid timestamp, hash varchar(512));
 
-// need php5-pgsql 
+// need php-mysql 
 // the help is displayed if we call this php without any parameter
 // clear.php can be called manually to clean the db of outdated stuff 
-// all files and dir should be readable by www-dat
+// all files and dir should be readable by www-data
 
-require_once('lib/common.php');
-require_once('lib/clear.php');
+require_once('lib/lib.php');
 
 function append($conn, $duration, $password)
 {
@@ -61,11 +60,10 @@ function get($conn, $id, $password)
 	if (!isset($line) && (!isset($err))) {
 		$err="not found"; }
 
-	global $file_dir;
 	if (isset($err)) {
 		return $err."\n"; }
 	else { 
-		return file_get_contents($file_dir.'/'.$line[0]);
+		return file_get_contents(FILE_DIR.'/'.$line[0]);
 	}
 }
 
@@ -102,7 +100,7 @@ function print_help() {
 	print("\n");
 	print("Will return the url to reach the posted data\n");
 	print("\n");
-	print("  To upload somethg with a limited duration\n");
+	print("  To upload somethg with a limited duration, in minutes\n");
 	print("somethg | curl -F data=@- -F 'duration=1' ".page_url()." \n");
 	print("\n");
 	print("Will return the url to reach the posted data. After the duration written, the posted element won't be available\n");
@@ -128,13 +126,13 @@ print("Notes :\n");
 	print("\n"); 
 }
 
-clear();
+clear(get_conn());
 
-$conn=get_conn(); 
 if (isset($_GET['id'])) {  // fetching something
 	$password = '';
 	if (isset($_GET['password'])) {
 		$password = $_GET['password']; }
+	$conn=get_conn(); 
 	print(get($conn, $_GET['id'], $password));
 }
 else { // storing something
@@ -146,10 +144,11 @@ else { // storing something
 	if (isset($_POST['password'])) {
 		$password = $_POST['password']; } 
 	if (isset($_FILES['data'])) {
+		$conn=get_conn(); 
 		$id=append($conn, $duration, $password); 
 		# now we store the file	
-		move_uploaded_file($_FILES['data']['tmp_name'], $file_dir.'/'.$id); 
-		chmod($file_dir.'/'.$id,0640);
+		move_uploaded_file($_FILES['data']['tmp_name'], FILE_DIR.'/'.$id); 
+		chmod(FILE_DIR.'/'.$id,0640);
 		if (isset($_POST['password'])) {
 			print(page_url().'?id='.$id."&password="."\n");
 		}

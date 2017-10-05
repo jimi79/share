@@ -1,7 +1,7 @@
 <?php
 
-require "lib/clear.php";
+require "lib/lib.php";
 
-clear();
+clear(get_conn());
 
 ?>
