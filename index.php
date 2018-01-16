@@ -126,13 +126,14 @@ print("Notes :\n");
 	print("\n"); 
 }
 
-clear(get_conn());
+$conn=get_conn();
+init_if_needed($conn);
+clear($conn);
 
 if (isset($_GET['id'])) {  // fetching something
 	$password = '';
 	if (isset($_GET['password'])) {
 		$password = $_GET['password']; }
-	$conn=get_conn(); 
 	print(get($conn, $_GET['id'], $password));
 }
 else { // storing something
@@ -144,7 +145,6 @@ else { // storing something
 	if (isset($_POST['password'])) {
 		$password = $_POST['password']; } 
 	if (isset($_FILES['data'])) {
-		$conn=get_conn(); 
 		$id=append($conn, $duration, $password); 
 		# now we store the file	
 		move_uploaded_file($_FILES['data']['tmp_name'], FILE_DIR.'/'.$id); 
