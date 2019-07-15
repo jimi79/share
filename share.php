@@ -12,44 +12,64 @@
 
 require_once('lib/lib.php');
 
-function append($conn, $duration, $password)
-{
+function append($conn, $duration, $file, $password)
+{ 
+	// insert
+	$conn->query("INSERT INTO data() VALUES()");
+
+	// calculate values
+	$id = $conn->lastInsertId('data_id_seq'); 
+
 	if (isset($duration)) {
 		$duration = intval($duration);
 	} else {
 		$duration = 24*60; // one day
 	}
-	// we calculate the end
 	$end = strtotime("+".$duration." minutes");
 	$send = date('Y-m-d H:i:s', $end);
+
+	$filename = FILE_DIR.'/'.$id;
+	$mime_type = mime_content_type($file['tmp_name']);
+
+	if (!(is_dir(FILE_DIR))) {
+		mkdir(FILE_DIR);
+	}
+	move_uploaded_file($_FILES['data']['tmp_name'], $filename); 
+	chmod(FILE_DIR.'/'.$id,0640);
 
 	if (isset($password)) {
 		$hash = password_hash($password, PASSWORD_DEFAULT);
 	}
 	else { $hash=""; } 
-	$sql = 'insert into data(duration, end_valid, hash) values(?, ?, ?);';
-	$params = array($duration, $send, $hash);
-	$query = $conn->prepare($sql);
-	$query->execute($params); 
-	return ($conn->lastInsertId('data_id_seq')); 
+
+	$query = $conn->prepare('UPDATE data SET duration = :duration, filename = :filename, mime_type = :mime_type, end_valid = :end_valid, hash = :hash WHERE id = :id'); 
+	$query->bindValue(":duration", $duration, PDO::PARAM_INT);
+	$query->bindValue(":filename", $filename, PDO::PARAM_STR);
+	$query->bindValue(":mime_type", $mime_type, PDO::PARAM_STR);
+	$query->bindValue(":end_valid", $send, PDO::PARAM_STR);
+	$query->bindValue(":hash", $hash, PDO::PARAM_STR);
+	$query->bindValue(":id", $id, PDO::PARAM_INT);
+	$query->execute(); 
+	return $id;
 }
 
 function get($conn, $id, $password)
 {
-	$sql = 'select id, end_valid, hash from data where id = ?';
+	$sql = 'SELECT * FROM data WHERE id = :id';
 	$query = $conn->prepare($sql);
-	$query->execute([$id]);
-	$line = $query->fetch();
-	if ($line !== null) {
-		$err=null; 
-		$end=strtotime($line[1]);
-		$now=time();
+	$query->bindValue(":id", $id, PDO::PARAM_INT);
+	$query->execute();
+	$res = $query->fetch();
+	if ($res !== null) {
+		$err = null; //TODO replace that with DateTime
+		$end = strtotime($res['end_valid']);
+		$now = time();
 		if ($end < $now) {
-			$line = NULL;
+			$res = NULL;
 		} 
 
 		// if we got a password in the record, then we test, otherwise we don't
-		$hash = $line[2];
+		$hash = $res['hash'];
 		if ($hash != "") {
 			if (!password_verify($password, $hash)) {
 				$object = NULL;
@@ -57,13 +77,16 @@ function get($conn, $id, $password)
 			}
 		} 
 	}; 
-	if (!isset($line) && (!isset($err))) {
+	if (!isset($res) && (!isset($err))) {
 		$err="not found"; }
 
 	if (isset($err)) {
 		return $err."\n"; }
 	else { 
-		return file_get_contents(FILE_DIR.'/'.$line[0]);
+		header(sprintf('Content-Type: %s', $res['mime_type']));
+		//header(sprintf('Content-Disposition: attachment; filename=%s', $res['filename']));
+		$filename = $res['filename'];
+		return file_get_contents($filename);
 	}
 }
 
@@ -144,11 +167,8 @@ else { // storing something
 	$password = Null;
 	if (isset($_POST['password'])) {
 		$password = $_POST['password']; } 
-	if (isset($_FILES['data'])) {
-		$id=append($conn, $duration, $password); 
-		# now we store the file	
-		move_uploaded_file($_FILES['data']['tmp_name'], FILE_DIR.'/'.$id); 
-		chmod(FILE_DIR.'/'.$id,0640);
+	if (isset($_FILES['data'])) { 
+		$id = append($conn, $duration, $_FILES['data'], $password);
 		if (isset($_POST['password'])) {
 			print(page_url().'?id='.$id."&password="."\n");
 		}

@@ -10,23 +10,23 @@ function get_conn()
 } 
 
 function clear($conn) {
-	$sql = 'select id from data where end_valid < now()';
+	$sql = 'SELECT id, filename FROM data WHERE end_valid < NOW()';
 	$query = $conn->prepare($sql);
 	$query->execute();
-	$sql = 'delete from data where id = ?;';
+	$qdel = $conn->prepare('DELETE FROM data WHERE id = :id?');
 	$qdel = $conn->prepare($sql);
-	while ($line = $query->fetch()) { 
-		$id=$line[0];
-		unlink(FILE_DIR.'/'.$id); 
-		$qdel->execute(array($id)); 
+	while ($res = $query->fetch()) { 
+		$id = $res['id'];
+		$qdel->bindValue(":id", $id, PDO::PARAM_INT);
+		if (file_exists($res['filename'])) {
+			unlink($res['filename']); 
+		}
+		$qdel->execute(); 
 	}
 }
 
-$tablename = 'data';
-
 function init($conn) { 
-	global $tablename;
-	$sql = sprintf('create table %s(id integer auto_increment, duration integer, end_valid timestamp, hash varchar(512), primary key(id));', $tablename);
+	$sql = sprintf('CREATE TABLE data(id INTEGER AUTO_INCREMENT, filename VARCHAR(200), mime_type VARCHAR(200), duration INTEGER, end_valid TIMESTAMP, hash VARCHAR(512), PRIMARY KEY(id));');
 	$query = $conn->prepare($sql);
 	$query->execute(); 
 	error_log('share initialized database');
@@ -34,7 +34,7 @@ function init($conn) {
 
 function init_if_needed($conn) {
 	global $tablename;
-	$sql = "show tables like ?;";
+	$sql = "show tables;";
 	$query = $conn->prepare($sql);
 	$query->execute(array($tablename));
 	$count = $query->rowCount();
