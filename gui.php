@@ -8,7 +8,11 @@ function uploadFile(file) {
 
 	xhr.upload.onprogress = function(e) {
 		var percentComplete = (e.loaded / e.total) * 100;
-		document.getElementById("pasteOutput").innerHTML = "Uploaded " + percentComplete + "%";
+		if (percentComplete < 99) {
+			document.getElementById("pasteOutput").innerHTML = "Uploaded " + percentComplete + "%";
+		} else {
+			document.getElementById("pasteOutput").innerHTML = "Almost done";
+		}
 	};
 
 
@@ -24,7 +28,7 @@ function uploadFile(file) {
 
 	xhr.onload = function() {
 		if (xhr.status == 200) {
-			document.getElementById("pasteOutput").innerHTML = xhr.responseText;
+			document.getElementById("pasteOutput").innerHTML = "<a href='" + xhr.responseText + "' target='_blank'>" + xhr.responseText + "</a>";
 		} else {
 			alert("Error! Upload failed");
 			document.getElementById("pasteOutput").innerHTML = 'Upload failed';

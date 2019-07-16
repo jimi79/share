@@ -85,10 +85,10 @@ elseif (isset($_FILES['data'])) {
 	if (isset($_FILES['data'])) { 
 		$id = append($conn, $duration, $_FILES['data'], $password);
 		if (isset($password)) {
-			print(page_url().'?id='.$id."&password="."\n");
+			adaptive_print(page_url().'?id='.$id."&password="."\n");
 		}
 		else {
-			print(page_url().'?id='.$id."\n");
+			adaptive_print(page_url().'?id='.$id."\n");
 		}
 	}
 }

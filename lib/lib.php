@@ -135,5 +135,10 @@ function page_url() {
 	return $pageURL; 
 }
 
+function adaptive_print($line) {
+	header(sprintf('Content-Type: text/plain'));
+	print($line);
+}
+
 
 ?>
