@@ -21,8 +21,10 @@ function append($conn, $duration, $file, $password)
 	$filename = FILE_DIR.'/'.$id;
 	$mime_type = mime_content_type($file['tmp_name']);
 
-	if (!(is_dir(FILE_DIR))) {
-		mkdir(FILE_DIR);
+	if (!is_dir(FILE_DIR)) {
+		if (!mkdir(FILE_DIR)) {
+			throw new Exception("cannot create dir 'res', change rights");
+		}
 	}
 	move_uploaded_file($_FILES['data']['tmp_name'], $filename); 
 	chmod(FILE_DIR.'/'.$id,0640);
@@ -134,11 +136,5 @@ function page_url() {
 	}
 	return $pageURL; 
 }
-
-function adaptive_print($line) {
-	header(sprintf('Content-Type: text/plain'));
-	print($line);
-}
-
 
 ?>

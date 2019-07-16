@@ -39,7 +39,7 @@ function uploadFile(file) {
 		alert("Error! Upload failed. Can not connect to server.");
 	};
 
-	xhr.open("POST", "gui_upload.php", true);
+	xhr.open("POST", "ajax_gui_upload.php", true);
 	//xhr.setRequestHeader("Content-Type", file.type);
 	console.log(file);
 	//xhr.send(file);
@@ -65,10 +65,10 @@ function handlePaste(e) {
 	<fieldset>
 		<legend>Usual upload button (you can drag n' drop)</legend>
 		<div>
-			<form class="box" method="post" action="share.php" enctype="multipart/form-data">
+			<form class="box" method="post" action="gui_upload.php" enctype="multipart/form-data">
 				Duration in minutes (link will work only in that duration):<input type="numeric" min="1" />	
 				<br>Password:<input type="password" name="password" />
-				<input type="file" name="data" />
+				<input type="file" name="data" required />
 				<br/>
 				<button type="submit">Upload</button>
 			</form>
