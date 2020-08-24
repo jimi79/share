@@ -6,5 +6,6 @@ define('DB_USER','share');
 define('DB_PASSWORD','yours');
 define('DB_HOST','localhost');
 define('DB_PORT',3306);
+#define('URL', 'short'); # in case you have some .htaccess or php redirection to the full url
 
 ?>

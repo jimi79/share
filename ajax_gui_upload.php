@@ -18,12 +18,7 @@ if (isset($_POST['password'])) {
 
 if (isset($_FILES['data'])) { 
 	$id = append($conn, $duration, $_FILES['data'], $password);
-	if (isset($_POST['password'])) {
-		print(dirname(page_url()).'/share.php?id='.$id."&password=");
-	}
-	else {
-		print(dirname(page_url()).'/share.php?id='.$id);
-	}
+	print(page_url_download($id, isset($password)));
 } 
 
 ?>

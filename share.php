@@ -27,17 +27,17 @@ function print_help() {
 	print("Syntax :\n");
 	print("\n");
 	print("  To upload somethg\n");
-	print("somethg | curl -F data=@- ".page_url()."\n");
+	print("somethg | curl -F data=@- ".page_url_upload()."\n");
 	print("\n");
 	print("Will return the url to reach the posted data\n");
 	print("\n");
 	print("  To upload somethg with a limited duration, in minutes\n");
-	print("somethg | curl -F data=@- -F 'duration=1' ".page_url()." \n");
+	print("somethg | curl -F data=@- -F 'duration=1' ".page_url_upload()." \n");
 	print("\n");
 	print("Will return the url to reach the posted data. After the duration written, the posted element won't be available\n");
 	print("\n");
 	print("  To upload somethg with a password\n");
-	print("somethg | curl -F data=@- -F 'password=foobar' ".page_url()."\n");
+	print("somethg | curl -F data=@- -F 'password=foobar' ".page_url_upload()."\n");
 	print("\n");
 	print("Will return the url to reach the posted data, and the parameter password ready to be filled.\n");
 	print("\n");
@@ -45,12 +45,13 @@ print("Notes :\n");
 	print("  - you can have duration and password\n");
 	print("\n");
 	print("  To upload somethg with the gui\n");
-	printf("go to %s/gui.php", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']));
+	printf("go to %s", page_url_gui());
 	print("\n");
 	print("\n");
 	print("  To download somethg\n");
 	print("\n");
-	print("curl [url given when uploading]\n");
+	#printf("curl %s[url given when uploading]\n", (defined("SHORTURL") ? "-L " : ""));
+	printf("curl [url given when uploading]\n");
 	print("\n");
 	print("If the url has a password parameter, you have to fill it with the password used to upload the element.\n"); 
 	print("\n");
@@ -83,13 +84,8 @@ elseif (isset($_FILES['data'])) {
 		}
 	} 
 	if (isset($_FILES['data'])) { 
-		$id = append($conn, $duration, $_FILES['data'], $password);
-		if (isset($password)) {
-			print(page_url().'?id='.$id."&password="."\n");
-		}
-		else {
-			print(page_url().'?id='.$id."\n");
-		}
+		$id = append($conn, $duration, $_FILES['data'], $password); 
+		print(page_url_download_no_short($id, isset($password)) . "\n");
 	}
 }
 else {

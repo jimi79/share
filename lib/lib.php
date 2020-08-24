@@ -124,17 +124,36 @@ function init_if_needed($conn) {
 	} 
 }
 
-function page_url() { 
-	$pageURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
+function page_url_base() {
+	$http = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://"; 
 	if (($_SERVER["SERVER_PORT"] != "80") and ($_SERVER["SERVER_PORT"] != "443"))
 	{
-		$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		$port = ":" . $_SERVER["SERVER_PORT"];
 	} 
 	else 
 	{
-		$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	}
-	return $pageURL; 
+		$port = "";
+	} 
+	return $http . $_SERVER["SERVER_NAME"] . $port;
+}
+
+function page_url_download($id, $with_password) { 
+	$url = defined("SHORTURL") ? SHORTURL : (dirname($_SERVER["REQUEST_URI"]) . "/share.php"); 
+	return sprintf("%s/%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=toto" : ""));
+}
+
+function page_url_download_no_short($id, $with_password) { 
+	$url = $_SERVER["REQUEST_URI"];
+	return sprintf("%s/%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=toto" : ""));
+}
+
+function page_url_upload() {
+	$url = $_SERVER["REQUEST_URI"]; 
+	return sprintf("%s%s", page_url_base(), $url);
+}
+
+function page_url_gui() {
+	return sprintf("%s%s/gui.php", page_url_base(), (dirname($_SERVER["REQUEST_URI"])));
 }
 
 ?>

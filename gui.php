@@ -4,8 +4,7 @@
 
 
 function uploadFile(file) {
-	var xhr = new XMLHttpRequest();
-
+	var xhr = new XMLHttpRequest(); 
 	xhr.upload.onprogress = function(e) {
 		var percentComplete = (e.loaded / e.total) * 100;
 		if (percentComplete < 99) {
@@ -13,19 +12,16 @@ function uploadFile(file) {
 		} else {
 			document.getElementById("pasteOutput").innerHTML = "Almost done";
 		}
-	};
-
+	}; 
 
   var fd = new FormData();
 	fd.append("data", file);
-	// These extra params aren't necessary but show that you can include other data.
 	if (pastePassword.value != '') {
 		fd.append("password", pastePassword.value);
 	}
 	if (pastePassword.duration != '') {
 		fd.append("duration", pasteDuration.value);
-	}
-
+	} 
 	xhr.onload = function() {
 		if (xhr.status == 200) {
 			document.getElementById("pasteOutput").innerHTML = "<a href='" + xhr.responseText + "' target='_blank'>" + xhr.responseText + "</a>";
@@ -33,8 +29,7 @@ function uploadFile(file) {
 			alert("Error! Upload failed");
 			document.getElementById("pasteOutput").innerHTML = 'Upload failed';
 		}
-	};
-
+	}; 
 	xhr.onerror = function() {
 		alert("Error! Upload failed. Can not connect to server.");
 	};
