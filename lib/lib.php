@@ -139,12 +139,12 @@ function page_url_base() {
 
 function page_url_download($id, $with_password) { 
 	$url = defined("SHORTURL") ? SHORTURL : (dirname($_SERVER["REQUEST_URI"]) . "/share.php"); 
-	return sprintf("%s/%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=toto" : ""));
+	return sprintf("%s/%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=enter_your_password_here" : ""));
 }
 
 function page_url_download_no_short($id, $with_password) { 
 	$url = $_SERVER["REQUEST_URI"];
-	return sprintf("%s/%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=toto" : ""));
+	return sprintf("%s/%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=enter_your_password_here" : ""));
 }
 
 function page_url_upload() {
