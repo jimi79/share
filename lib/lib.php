@@ -26,7 +26,20 @@ function append($conn, $duration, $file, $password)
 			throw new Exception("cannot create dir 'res', change rights");
 		}
 	}
+/*
+	$c = file_get_contents($_FILES['data']['tmp_name']);
+	for ($i = 0; $i < strlen($c); $i++) {
+		    echo str_pad(dechex(ord($c[$i])), 2, '0', STR_PAD_LEFT);
+	}
+*/
 	move_uploaded_file($_FILES['data']['tmp_name'], $filename); 
+/*	#echo($_FILES['data']['tmp_name']);
+	print("<br>");
+	$c = file_get_contents($filename);
+	for ($i = 0; $i < strlen($c); $i++) {
+		    echo str_pad(dechex(ord($c[$i])), 2, '0', STR_PAD_LEFT);
+	}
+*/
 	chmod(FILE_DIR.'/'.$id,0640);
 
 	if (isset($password)) {
