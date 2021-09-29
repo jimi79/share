@@ -4,6 +4,10 @@ require_once("conf/config.php");
 
 function append($conn, $duration, $file, $password)
 { 
+
+	error_log(print_r($file, true));
+
+
 	// insert
 	$conn->query("INSERT INTO data() VALUES()");
 
@@ -157,7 +161,7 @@ function page_url_download($id, $with_password) {
 
 function page_url_download_no_short($id, $with_password) { 
 	$url = $_SERVER["REQUEST_URI"];
-	return sprintf("%s/%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=enter_your_password_here" : ""));
+	return sprintf("%s%s?id=%s%s", page_url_base(), $url, $id, ($with_password ? "&password=enter_your_password_here" : ""));
 }
 
 function page_url_upload() {

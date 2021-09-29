@@ -23,7 +23,6 @@ function debug()
 } 
 
 function print_help() {
-
 	print("Syntax :\n");
 	print("\n");
 	print("  To upload somethg\n");
