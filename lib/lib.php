@@ -138,10 +138,8 @@ function page_url_base() {
 }
 
 function page_url_download($id, $with_password) { 
-
 	$url = page_url_base();
 	$dirname = dirname($_SERVER["REQUEST_URI"]);
-	error_log($dirname);
 	if ($dirname != '/') { $url = $url . $dirname; }
 	$url = $url . sprintf("/share.php?id=%d", $id);
 	if ($with_password) { $url = $url . "&password=enter_your_password_here"; }
