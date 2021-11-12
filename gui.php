@@ -16,6 +16,7 @@ function uploadFile(file) {
 
   var fd = new FormData();
 	fd.append("data", file);
+
 	if (pastePassword.value != '') {
 		fd.append("password", pastePassword.value);
 	}
@@ -35,20 +36,24 @@ function uploadFile(file) {
 	};
 
 	xhr.open("POST", "ajax_gui_upload.php", true);
-	//xhr.setRequestHeader("Content-Type", file.type);
-	console.log(file);
-	//xhr.send(file);
 	xhr.send(fd);
 }
 
 function handlePaste(e) {
+	document.getElementById("pasteOutput").innerHTML = "Starting";
+	ok = false;
 	for (var i = 0 ; i < e.clipboardData.items.length ; i++) {
 		var item = e.clipboardData.items[i];
 		if (item.type.indexOf("image") -1) {
-			uploadFile(item.getAsFile());
-		} else {
-			console.log("Discardingimage paste data");
+			if (item.getAsFile() != null) {
+				uploadFile(item.getAsFile());
+				ok = true;
+			}
 		}
+	}
+	if (!ok) {
+		document.getElementById("pasteOutput").innerHTML = "Error";
+		alert("Error, the thing you pasted isn't a file. It works if you copy paste a file or a picture.");
 	}
 }
 

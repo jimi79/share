@@ -1,21 +1,23 @@
 #!/bin/bash
 
 a="$(date)"
-b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' https://jimi79.hd.free.fr/share/share.php)")
+b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' https://lorem.jim.netnix.in/share/share.php)")
 if [ "$a" != "$b" ];then
 	echo "Error while uploading a basic thing"
 	printf "%s != %s\n" "$a" "$b" 
 	exit 1
 fi
-b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' https://jimi79.hd.free.fr/share/share.php)")
+b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' https://lorem.jim.netnix.in/share/share.php)")
 if [ "$a" == "$b" ];then
 	echo "Error, could fetch a password protected file"
 	exit 1
 fi 
-b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' https://jimi79.hd.free.fr/share/share.php)foo") # returned url is blah?id=4&password=
+url=$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' https://lorem.jim.netnix.in/share/share.php)
+url=${url/enter_your_password_here/foo}
+b=$(curl -s $url)
 if [ "$a" != "$b" ];then
 	echo "Error, could not fetch a password protected file"
 	printf "%s != %s\n" "$a" "$b" 
 	exit 1
 fi
-
+echo "ok"

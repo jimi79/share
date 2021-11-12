@@ -84,7 +84,7 @@ elseif (isset($_FILES['data'])) {
 	} 
 	if (isset($_FILES['data'])) { 
 		$id = append($conn, $duration, $_FILES['data'], $password); 
-		print(page_url_download_no_short($id, isset($password)) . "\n");
+		print(page_url_download($id, isset($password)) . "\n");
 	}
 }
 else {
