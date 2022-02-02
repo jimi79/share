@@ -1,0 +1,5 @@
+Order allow,deny
+Deny from all
+<FilesMatch ^(share\.php)?$>
+  Allow from all
+</FilesMatch>
