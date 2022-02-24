@@ -26,6 +26,7 @@ function append($conn, $duration, $file, $password)
 			throw new Exception("cannot create dir 'res', change rights");
 		}
 	}
+
 	move_uploaded_file($_FILES['data']['tmp_name'], $filename); 
 	chmod(FILE_DIR.'/'.$id,0640);
 
