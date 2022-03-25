@@ -24,6 +24,7 @@ function debug()
 } 
 
 function print_help() {
+	alert_default_password();
 	print("Syntax :\n");
 	print("\n");
 	print("  To upload somethg\n");
@@ -66,7 +67,7 @@ if (isset($_GET['id'])) {
 	$password = '';
 	if (isset($_GET['password'])) {
 		$password = $_GET['password']; }
-	print(get($conn, $_GET['id'], $password));
+	get($conn, $_GET['id'], $password); // write to stdout
 }
 elseif (isset($_FILES['data'])) {
 	// storing something
@@ -84,7 +85,7 @@ elseif (isset($_FILES['data'])) {
 		}
 	} 
 	if (isset($_FILES['data'])) { 
-		$id = append($conn, $duration, $_FILES['data'], $password); 
+		$id = put($conn, $duration, $_FILES['data'], $password); 
 		print(page_url_download($id, isset($password)) . "\n");
 	}
 }

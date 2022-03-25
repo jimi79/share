@@ -62,6 +62,11 @@ function handlePaste(e) {
 
 
 <body>
+	<?php
+		require_once('lib/lib.php');
+		alert_default_password_html();
+	?>
+
 	<fieldset>
 		<legend>Usual upload button (you can drag n' drop)</legend>
 		<div>

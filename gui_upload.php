@@ -24,7 +24,7 @@ if (isset($_POST['password'])) {
 } 
 
 if (isset($_FILES['data'])) { 
-	$id = append($conn, $duration, $_FILES['data'], $password);
+	$id = put($conn, $duration, $_FILES['data'], $password);
 	print_link(page_url_download($id, isset($password)));
 } 
 

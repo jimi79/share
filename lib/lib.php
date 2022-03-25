@@ -1,8 +1,9 @@
 <?php 
 
 require_once("conf/config.php"); 
+require_once("lib/crypt.php");
 
-function append($conn, $duration, $file, $password)
+function put($conn, $duration, $file, $password)
 { 
 	// insert
 	$conn->query("INSERT INTO data() VALUES()");
@@ -27,8 +28,12 @@ function append($conn, $duration, $file, $password)
 		}
 	}
 
-	move_uploaded_file($_FILES['data']['tmp_name'], $filename); 
-	chmod(FILE_DIR.'/'.$id,0640);
+# here i need to cipher the file somehow
+	if (!encrypt_file($_FILES['data']['tmp_name'], CIPHER_PASS, $filename)) {
+		throw new Exception('cannot crypt file'); 
+	}
+
+	chmod($filename, 0640);
 
 	if (isset($password)) {
 		$hash = password_hash($password, PASSWORD_DEFAULT);
@@ -79,7 +84,10 @@ function get($conn, $id, $password)
 		header(sprintf('Content-Type: %s', $res['mime_type']));
 		//header(sprintf('Content-Disposition: attachment; filename=%s', $res['filename'])); // uncomment to start a d/l on the client side
 		$filename = $res['filename'];
-		return file_get_contents($filename);
+		if (!decrypt_file($filename, CIPHER_PASS, '')) {
+			throw new Exception('error while decrypting file');
+		}
+		//return file_get_contents($filename);
 	}
 }
 
@@ -154,6 +162,36 @@ function page_url_upload() {
 
 function page_url_gui() {
 	return sprintf("%s%s/gui.php", page_url_base(), (dirname($_SERVER["REQUEST_URI"])));
+}
+
+function alert_default_password() {
+	if (is_default_password()) {
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("Change the password in the config file !\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+	}
+}
+
+function alert_default_password_html() {
+	if (is_default_password()) {
+		printf("<h1>");
+		printf("Change the password in the config file !");
+		printf("</h1>");
+	}
+}
+
+function is_default_password() {
+	return (CIPHER_PASS == 'change_it_please_for_godsake');
 }
 
 ?>
