@@ -16,18 +16,18 @@ run with cli:
 Syntax :
 
 To upload somethg
-`somethg | curl -F data=@- https://share.jim.netnix.in/share.php`
+`somethg | curl -F data=@- https://mysite.com/share.php`
 `something` can be `date`, `fortune`, etc.
 
 Will return the url to reach the posted data
 
 To upload somethg with a limited duration, in minutes
-somethg | curl -F data=@- -F 'duration=1' https://share.jim.netnix.in/share.php
+somethg | curl -F data=@- -F 'duration=1' https://mysite.com/share.php
 
 Will return the url to reach the posted data. After the duration written, the posted element won't be available
 
 To upload somethg with a password
-somethg | curl -F data=@- -F 'password=foobar' https://share.jim.netnix.in/share.php
+somethg | curl -F data=@- -F 'password=foobar' https://mysite.com/share.php
 
 Will return the url to reach the posted data, and the parameter password ready to be filled.
 
@@ -35,7 +35,7 @@ Notes :
 - you can have duration and password
 
 To upload somethg with the gui
-go to https://share.jim.netnix.in//gui.php
+go to https://mysite.com//gui.php
 
 To download somethg
 
