@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/plain');
 
 // Preparation :
 // i need a DB, with conf/config.php describing the connection id
