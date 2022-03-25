@@ -76,18 +76,18 @@ function get($conn, $id, $password)
 		} 
 	}; 
 	if (!isset($res) && (!isset($err))) {
-		$err="not found"; }
-
+		$err="not found";
+	}
 	if (isset($err)) {
-		return $err."\n"; }
-	else { 
+		return sprintf("%s\n", $err);
+	} else { 
 		header(sprintf('Content-Type: %s', $res['mime_type']));
 		//header(sprintf('Content-Disposition: attachment; filename=%s', $res['filename'])); // uncomment to start a d/l on the client side
 		$filename = $res['filename'];
 		if (!decrypt_file($filename, CIPHER_PASS, '')) {
 			throw new Exception('error while decrypting file');
 		}
-		//return file_get_contents($filename);
+		return "";
 	}
 }
 

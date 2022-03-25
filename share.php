@@ -67,7 +67,7 @@ if (isset($_GET['id'])) {
 	$password = '';
 	if (isset($_GET['password'])) {
 		$password = $_GET['password']; }
-	get($conn, $_GET['id'], $password); // write to stdout
+	print(get($conn, $_GET['id'], $password));
 }
 elseif (isset($_FILES['data'])) {
 	// storing something

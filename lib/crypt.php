@@ -64,7 +64,6 @@ function decrypt_file($source, $key, $dest)
 		$ok = ($fpOut = fopen($dest, 'w'));
 	}
 	if ($ok) {
-		error_log("-----------------".$source."------------");
 		if ($fpIn = fopen($source, 'rb')) {
 			// Get the initialzation vector from the beginning of the file
 			$iv = fread($fpIn, 16);
@@ -83,7 +82,6 @@ function decrypt_file($source, $key, $dest)
 		}
 		if ($dest != "") {
 			$ok = fclose($fpOut);
-			error_log("-----------------==============");
 		}
 	}
 	return $ok;
