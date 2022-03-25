@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pass=$(date|md5sum|awk '{print $1}')
+url=$(cat $1 | curl -s -F "password=$pass" -F data=@- https://share.jim.netnix.in/share.php)
+url=${url//enter_your_password_here/$pass}
+printf "%s\n" $url
+if pgrep tmux > /dev/null;then
+	tmux set-buffer "curl \"$url\""
+fi
