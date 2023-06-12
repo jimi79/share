@@ -126,7 +126,7 @@ function init_if_needed($conn) {
 	global $tablename;
 	$sql = "show tables;";
 	$query = $conn->prepare($sql);
-	$query->execute(array($tablename));
+	$query->execute();
 	$count = $query->rowCount();
 	if ($count == 0) {
 		init($conn);
