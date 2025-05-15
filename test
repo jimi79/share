@@ -4,45 +4,56 @@
 host="https://share.jim.netnix.in/"
 
 
-a="$(date)"
-b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' $host"share.php")")
-if [ "$a" != "$b" ];then
-	echo "Error while uploading a basic thing"
-	printf "%s != %s\n" "$a" "$b" 
-	exit 1
-fi
-b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' $host"share.php")")
-if [ "$a" == "$b" ];then
-	echo "Error, could fetch a password protected file"
-	exit 1
-fi 
-url=$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' $host"share.php")
-url=${url/enter_your_password_here/foo}
-b=$(curl -s $url)
-if [ "$a" != "$b" ];then
-	echo "Error, could not fetch a password protected file"
-	printf "%s != %s\n" "$a" "$b" 
-	exit 1
-fi
-if [ -f test.bin ] || [ -f res.bin ] ;then
-	printf "Cannot test everything, there is a test.bin or a res.bin file that i don't dare to erase\n"
-	exit 1
-fi
-dd if=/dev/random of=test.bin bs=1048 count=10 2> /dev/null
+test_basic() {
+	a="$(date)"
+	b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' $host"share.php")")
+	if [ "$a" != "$b" ];then
+		echo "Error while uploading a basic thing"
+		printf "%s != %s\n" "$a" "$b" 
+		exit 1
+	fi
+}
 
-url=$(cat test.bin | curl -s -F data=@- -F 'duration=1' $host"share.php")
-curl -s "$url" > res.bin
-if ! diff res.bin test.bin;then
-	echo "it fails on a binary file, i'll leave test.bin and res.bin for you to check"
-	ok=0
-else
-	ok=1
-fi
+test_pwd() {
+	b=$(curl -s "$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' $host"share.php")")
+	if [ "$a" == "$b" ];then
+		echo "Error, could fetch a password protected file"
+		exit 1
+	fi 
+	url=$(echo "$a" | curl -s -F data=@- -F 'duration=1' -F 'password=foo' $host"share.php")
+	url=${url/enter_your_password_here/foo}
+	b=$(curl -s $url)
+	if [ "$a" != "$b" ];then
+		echo "Error, could not fetch a password protected file"
+		printf "%s != %s\n" "$a" "$b" 
+		exit 1
+	fi
+}
 
-if [ $ok -eq 1 ];then
-	rm test.bin res.bin
-	echo "ok"
-	exit 0
-else
-	exit 1
-fi
+test_binary() {
+	if [ -f test.bin ] || [ -f res.bin ] ;then
+		printf "Cannot test everything, there is a test.bin or a res.bin file that i don't dare to erase\n"
+		exit 1
+	fi
+	dd if=/dev/random of=test.bin bs=1048 count=10 2> /dev/null
+
+	url=$(cat test.bin | curl -s -F data=@- -F 'duration=1' $host"share.php")
+	curl -s "$url" > res.bin
+	if ! diff res.bin test.bin;then
+		echo "it fails on a binary file, i'll leave test.bin and res.bin for you to check"
+		ok=0
+	else
+		ok=1
+	fi
+
+	if [ $ok -eq 1 ];then
+		rm test.bin res.bin
+		exit 0
+	else
+		exit 1
+	fi
+}
+
+test_basic
+test_pwd
+test_binary
