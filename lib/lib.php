@@ -101,12 +101,17 @@ function get_conn()
 } 
 
 function clear($conn) {
-	$sql = 'SELECT id, filename FROM data WHERE end_valid < NOW()';
+	$end = strtotime("+0 minute");
+	$send = date('Y-m-d H:i:s', $end);
+	error_log("Checking everything less than  $send");
+	$sql = 'SELECT id, filename FROM data WHERE end_valid < :now';
 	$query = $conn->prepare($sql);
+	$query->bindValue(":now", $send, PDO::PARAM_STR);
 	$query->execute();
 	$qdel = $conn->prepare('DELETE FROM data WHERE id = :id');
 	while ($res = $query->fetch()) { 
 		$id = $res['id'];
+		error_log("Deleting $id");
 		$qdel->bindValue(":id", $id, PDO::PARAM_INT);
 		$qdel->execute(); 
 		if (file_exists($res['filename'])) {
@@ -114,8 +119,9 @@ function clear($conn) {
 		}
 	}
 
-	$sql = 'DELETE FROM url WHERE end_valid < NOW()';
+	$sql = 'DELETE FROM url WHERE end_valid < :now';
 	$query = $conn->prepare($sql);
+	$query->bindValue(":now", $send, PDO::PARAM_STR);
 	$query->execute();
 }
 
