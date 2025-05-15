@@ -98,7 +98,7 @@ function handlePaste(e) {
 		<legend>Url shortener</legend>
 		Enter the url
 			<form class="box" method="post" action="gui_shortener.php" enctype="multipart/form-data">
-			<input type="text" name="url" required />
+			<input type="text" style="width: 100%" name="url" required />
 			<br/>
 			<button type="submit">Process</button>
 		<form>
