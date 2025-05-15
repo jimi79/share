@@ -59,7 +59,7 @@ function get($conn, $id, $password)
 	$query->execute();
 	$res = $query->fetch();
 	if ($res !== null) {
-		$err = null; //TODO replace that with DateTime
+		$err = null;
 		$end = strtotime($res['end_valid']);
 		$now = time();
 		if ($end < $now) {
@@ -113,17 +113,25 @@ function clear($conn) {
 			unlink($res['filename']); 
 		}
 	}
+
+	$sql = 'DELETE FROM url WHERE end_valid < NOW()';
+	$query = $conn->prepare($sql);
+	$query->execute();
 }
 
 function init($conn) { 
-	$sql = sprintf('CREATE TABLE data(id INTEGER AUTO_INCREMENT, filename VARCHAR(200), mime_type VARCHAR(200), duration INTEGER, end_valid TIMESTAMP, hash VARCHAR(512), PRIMARY KEY(id));');
+	error_log('share initialized database');
+
+	$sql = 'CREATE TABLE data(id INTEGER AUTO_INCREMENT, filename VARCHAR(200), mime_type VARCHAR(200), duration INTEGER, end_valid TIMESTAMP, hash VARCHAR(512), PRIMARY KEY(id));';
 	$query = $conn->prepare($sql);
 	$query->execute(); 
-	error_log('share initialized database');
+
+	$sql = 'CREATE TABLE url(id INTEGER AUTO_INCREMENT, url VARCHAR(2048), end_valid TIMESTAMP, PRIMARY KEY(id));';
+	$query = $conn->prepare($sql);
+	$query->execute(); 
 } 
 
 function init_if_needed($conn) {
-	global $tablename;
 	$sql = "show tables;";
 	$query = $conn->prepare($sql);
 	$query->execute();
@@ -161,7 +169,11 @@ function page_url_upload() {
 }
 
 function page_url_gui() {
-	return sprintf("%s%s/gui.php", page_url_base(), (dirname($_SERVER["REQUEST_URI"])));
+	return sprintf("%s/gui.php", page_url_base());
+}
+
+function page_url_shortener($id) {
+	return sprintf("%s/s.php?id=%d", page_url_base(), $id);
 }
 
 function alert_default_password() {
@@ -192,6 +204,44 @@ function alert_default_password_html() {
 
 function is_default_password() {
 	return (CIPHER_PASS == 'change_it_please_for_godsake');
+}
+
+function put_url($conn, $url) {
+	$end = strtotime("+1 day");
+	$send = date('Y-m-d H:i:s', $end);
+
+	$sql = "INSERT INTO url(url, end_valid) VALUES (:url, :end_valid);";
+	$query = $conn->prepare($sql);
+	$query->bindValue(":url", $url, PDO::PARAM_STR);
+	$query->bindValue(":end_valid", $send, PDO::PARAM_STR);
+	$query->execute(); 
+	$id = $conn->lastInsertId('data_id_seq'); 
+	return $id;
+}
+
+function get_url($conn, $id) {
+	$sql = "SELECT url FROM url WHERE id = :id;";
+	$query = $conn->prepare($sql);
+	$query->bindValue("id", $id, PDO::PARAM_INT);
+	$query->execute();
+	$res = $query->fetch();
+	if ($res == null) {
+		return "";
+	} else {
+		return $res['url'];
+	}
+}
+
+function print_link($link) {
+	printf("<a href='%s' target='_blank'>%s</a>", $link, $link);
+}
+
+function add_https_if_needed($url) {
+	if (strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0) {
+		return 'https://' . $url;
+	} else {
+		return $url;
+	}
 }
 
 ?>

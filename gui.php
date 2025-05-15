@@ -94,6 +94,15 @@ function handlePaste(e) {
 		Link will appear here
 		</div>
 	</fieldset>
+	<fieldset>
+		<legend>Url shortener</legend>
+		Enter the url
+			<form class="box" method="post" action="gui_shortener.php" enctype="multipart/form-data">
+			<input type="text" name="url" required />
+			<br/>
+			<button type="submit">Process</button>
+		<form>
+	</fieldset>
 </body>
 
 <script>
