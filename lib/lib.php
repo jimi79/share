@@ -172,6 +172,10 @@ function page_url_gui() {
 	return sprintf("%s/gui.php", page_url_base());
 }
 
+function page_url_main() {
+	return sprintf("%s/share.php", page_url_base());
+}
+
 function page_url_shortener($id) {
 	return sprintf("%s/s.php?id=%d", page_url_base(), $id);
 }
