@@ -2,7 +2,7 @@
 
 A php script that allow to share files easily, like sprunge.
 
-There is also some sort of gui, to do copy paste or drag&drop
+There is also some sort of gui, to do copy paste or drag&drop. And an url shortener.
 
 install: 
 * have a database
@@ -35,7 +35,7 @@ Notes :
 - you can have duration and password
 
 To upload somethg with the gui
-go to https://mysite.com//gui.php
+go to https://mysite.com/gui.php
 
 To download somethg
 
@@ -44,7 +44,7 @@ curl [url given when uploading]
 If the url has a password parameter, you have to fill it with the password used to upload the element.
 
 Notes :
-- if the password is wrong, the message 'incorrect password' will be returned
-- if the element doesn't exists anymore, or never existed, the message 'not found' will be returned
+- If the password is wrong, the message 'incorrect password' will be returned.
+- If the element doesn't exists anymore, or never existed, the message 'not found' will be returned.
 
-
+The url shortener is just at the end of the gui, and nothing is special about it.
