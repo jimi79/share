@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: https://pic.jim.netnix.in");
 require_once('lib/lib.php');
 require_once('lib/init.php');
 
