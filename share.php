@@ -62,6 +62,9 @@ print("Notes :\n");
 	print("\n"); 
 }
 
+#error_log(var_dump($_GET));
+
+
 if (isset($_GET['id'])) {
 	// fetching something
 	$password = '';

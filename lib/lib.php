@@ -103,7 +103,7 @@ function get_conn()
 function clear($conn) {
 	$end = strtotime("+0 minute");
 	$send = date('Y-m-d H:i:s', $end);
-	error_log("Checking everything less than  $send");
+	#error_log("Checking everything less than  $send");
 	$sql = 'SELECT id, filename FROM data WHERE end_valid < :now';
 	$query = $conn->prepare($sql);
 	$query->bindValue(":now", $send, PDO::PARAM_STR);
@@ -164,7 +164,7 @@ function page_url_download($id, $with_password) {
 	$url = page_url_base();
 	$dirname = dirname($_SERVER["REQUEST_URI"]);
 	if ($dirname != '/') { $url = $url . $dirname; }
-	$url = $url . sprintf("/share.php?id=%d", $id);
+	$url = $url . sprintf("?id=%d", $id);
 	if ($with_password) { $url = $url . "&password=enter_your_password_here"; }
 	return $url;
 }
